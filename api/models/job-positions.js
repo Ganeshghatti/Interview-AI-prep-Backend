@@ -91,8 +91,8 @@ const jobPositionSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["Open", "Closed", "Paused"],
-    default: "Open",
+    enum: ["Active", "Inactive"],
+    default: "Active",
   },
 });
 
