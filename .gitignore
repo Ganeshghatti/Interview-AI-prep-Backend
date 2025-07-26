@@ -1,0 +1,12 @@
+# Ignore log files and temp files
+*.log
+*.tmp
+
+# Ignore folders
+node_modules/
+dist/
+build/
+
+# Ignore system or IDE files
+.DS_Store
+.env
