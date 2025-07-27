@@ -9,7 +9,7 @@ const client = twilio(
 const sendSMS = async (phone, otp) => {
   try {
     const message = await client.messages.create({
-      body: `Your OTP is: ${otp}`,
+      body: `Welcome to InterviewPrepAI! Your one-time verification code is ${otp}. This code will expire in 5 minutes. Don't share it with anyone.`,
       from: "+18566581375",
       to: phone,
     });

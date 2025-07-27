@@ -27,11 +27,20 @@ exports.sendSignupOtp = async (req, res) => {
         .json({ success: false, msg: "Valid email is required" });
     }
 
-    const existingUser = await User.findOne({ phone });
-    if (existingUser) {
+    const existingUserByPhone = await User.findOne({ phone });
+    const existingUserByEmail = await User.findOne({ email });
+    
+    if (existingUserByPhone) {
       return res.status(400).json({
         success: false,
         msg: "User already exists with this phone number",
+      });
+    }
+    
+    if (existingUserByEmail) {
+      return res.status(400).json({
+        success: false,
+        msg: "User already exists with this email address",
       });
     }
 
