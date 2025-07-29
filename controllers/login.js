@@ -19,6 +19,7 @@ const loginWithPassword = async (req, res) => {
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "24h" });
         res.json({ token });
+        // res.json({ success: true, token, user });
     } catch (err) {
         console.error("Error in loginWithPassword:", err.message);
         res.status(500).json({ msg: "Server error" });

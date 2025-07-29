@@ -1,8 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const rateLimit = require("express-rate-limit");
 const cors = require("cors");
-const authRoutes = require("./routes/auth");
+const connectDB = require("./config/db");
+const authRoutes = require("./routes/auth/auth");
+const adminRoutes = require("./routes/admin/routes");
+const interviewPrepRoutes = require("./routes/interview-prep/take-interview");
+const applyjobRoutes = require("./routes/apply-jobs/get-jobs");
 
 dotenv.config();
 
@@ -11,17 +16,28 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
+// Global rate limiting - applies to all routes
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 200, // Limit each IP to 200 requests per window
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: "Too many requests from this IP, please try again after 15 minutes",
+});
 
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-    .then(() => console.log("MongoDB connected"))
-    .catch(err => {
-        console.error("MongoDB connection error:", err);
-        process.exit(1);
-    });
+// Apply global rate limiting to all requests
+app.use(globalLimiter);
+
+app.use("/auth", authRoutes);
+app.use("/admin", adminRoutes);
+app.use("/interview-prep", interviewPrepRoutes);
+app.use("/apply-jobs", applyjobRoutes);
+
+connectDB();
+
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
