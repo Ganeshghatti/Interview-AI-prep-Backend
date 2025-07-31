@@ -1,6 +1,6 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { ChatGoogleGenerativeAI } = require("@langchain/google-genai");
-const { StructuredOutputParser } = require("langchain/output_parsers");
+// const { StructuredOutputParser } = require("langchain/output_parsers");
 const { PromptTemplate } = require("langchain/prompts");
 const { z } = require("zod");
 
@@ -63,50 +63,50 @@ const analyseInterview = async (
       maxOutputTokens: 4000,
     });
 
-    const parser = StructuredOutputParser.fromZodSchema(analysisSchema);
+//     const parser = StructuredOutputParser.fromZodSchema(analysisSchema);
 
-    const formatInstructions = parser.getFormatInstructions();
+//     const formatInstructions = parser.getFormatInstructions();
 
-    const prompt = new PromptTemplate({
-      template: `You are an expert interview analyst. Analyze the following interview conversation and provide a detailed, structured assessment.
+//     const prompt = new PromptTemplate({
+//       template: `You are an expert interview analyst. Analyze the following interview conversation and provide a detailed, structured assessment.
 
-Job Role: {jobRole}
-Difficulty: {difficulty}
-Duration: {duration} minutes
+// Job Role: {jobRole}
+// Difficulty: {difficulty}
+// Duration: {duration} minutes
 
-Conversation:
-{conversation}
+// Conversation:
+// {conversation}
 
-Analyze the candidate's performance and provide detailed feedback in the following structured format:
+// Analyze the candidate's performance and provide detailed feedback in the following structured format:
 
-{format_instructions}
+// {format_instructions}
 
-Focus on:
-1. Communication skills (clarity, articulation, confidence)
-2. Technical knowledge relevant to the role
-3. Problem-solving abilities
-4. Response quality and relevance
-5. Specific examples from the conversation
-6. Actionable recommendations for improvement
+// Focus on:
+// 1. Communication skills (clarity, articulation, confidence)
+// 2. Technical knowledge relevant to the role
+// 3. Problem-solving abilities
+// 4. Response quality and relevance
+// 5. Specific examples from the conversation
+// 6. Actionable recommendations for improvement
 
-Be thorough, constructive, and professional in your analysis.`,
-      inputVariables: ["jobRole", "conversation", "difficulty", "duration"],
-      partialVariables: { format_instructions: formatInstructions },
-    });
+// Be thorough, constructive, and professional in your analysis.`,
+//       inputVariables: ["jobRole", "conversation", "difficulty", "duration"],
+//       partialVariables: { format_instructions: formatInstructions },
+//     });
 
-    const input = await prompt.format({
-      jobRole: JSON.stringify(jobRole, null, 2),
-      conversation: conversation
-        .map((msg) => `${msg.role}: ${msg.content}`)
-        .join("\n"),
-      difficulty,
-      duration,
-    });
+//     const input = await prompt.format({
+//       jobRole: JSON.stringify(jobRole, null, 2),
+//       conversation: conversation
+//         .map((msg) => `${msg.role}: ${msg.content}`)
+//         .join("\n"),
+//       difficulty,
+//       duration,
+//     });
 
-    const response = await llm.invoke(input);
-    const analysis = await parser.parse(response.content);
+//     const response = await llm.invoke(input);
+//     const analysis = await parser.parse(response.content);
 
-    return analysis;
+    return true;
   } catch (error) {
     console.error("Error in analyseInterview:", error);
     throw error;
