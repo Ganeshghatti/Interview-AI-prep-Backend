@@ -13,12 +13,6 @@ const elevenlabs = new ElevenLabsClient({
   apiKey: process.env.ELEVEN_LABS_KEY,
 });
 
-// Ensure public directory exists
-const publicDir = path.join(__dirname, "public");
-if (!fs.existsSync(publicDir)) {
-  fs.mkdirSync(publicDir, { recursive: true });
-}
-
 exports.getAllActiveJobRoles = async (req, res) => {
   try {
     const jobRoles = await JobRole.find({ status: "Active" });
