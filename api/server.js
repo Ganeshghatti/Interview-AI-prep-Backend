@@ -8,6 +8,7 @@ const authRoutes = require("./routes/auth/auth");
 const adminRoutes = require("./routes/admin/routes");
 const interviewPrepRoutes = require("./routes/interview-prep/take-interview");
 const applyjobRoutes = require("./routes/apply-jobs/get-jobs");
+const userdashboard = require("./routes/dashboard/dashboard");
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 app.use("/interview-prep", interviewPrepRoutes);
 app.use("/apply-jobs", applyjobRoutes);
+app.use("/user", userdashboard);
 
 connectDB();
 

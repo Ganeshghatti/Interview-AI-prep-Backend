@@ -6,7 +6,8 @@ const uuid = require("uuid").v4;
 const path = require("path");
 const fs = require("fs");
 const axios = require("axios");
-const { ElevenLabsClient, play } = require("@elevenlabs/elevenlabs-js");
+const { ElevenLabsClient } = require("@elevenlabs/elevenlabs-js");
+const { analyseInterview } = require("../../utils/interviewanalysis");
 
 const elevenlabs = new ElevenLabsClient({
   apiKey: process.env.ELEVEN_LABS_KEY,
@@ -83,8 +84,35 @@ exports.startInterviewPrep = async (req, res) => {
         console.log(
           `Interview ${interviewPrep._id} status updated to Completed`
         );
+
+        // Fetch the full interview with jobRole
+        const fullInterview = await InterviewPrep.findById(
+          interviewPrep._id
+        ).populate("jobRoleId");
+        if (fullInterview) {
+          // Get structured analysis
+          const analysis = await analyseInterview(
+            fullInterview.jobRoleId,
+            fullInterview.conversation,
+            fullInterview.difficulty,
+            fullInterview.duration
+          );
+
+          // Save to analytics field
+          fullInterview.analytics = {
+            analysis,
+            generatedAt: new Date(),
+            interviewId: fullInterview._id,
+          };
+          await fullInterview.save();
+          console.log(
+            `Structured analysis saved for interview ${fullInterview._id}`
+          );
+        }
       } catch (error) {
-        console.error(`Error updating interview status: ${error.message}`);
+        console.error(
+          `Error updating interview status or analysis: ${error.message}`
+        );
       }
     }, timeUntilEnd);
 
@@ -168,11 +196,9 @@ ${interview.conversation
 
   `;
 
-    console.log(prompt, "prompt");
-
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.0-pro",
       temperature: 0.2,
       maxOutputTokens: 200,
     });
