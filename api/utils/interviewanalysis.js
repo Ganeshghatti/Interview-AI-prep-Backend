@@ -1,7 +1,7 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { ChatGoogleGenerativeAI } = require("@langchain/google-genai");
 // const { StructuredOutputParser } = require("langchain/output_parsers");
-const { PromptTemplate } = require("langchain/prompts");
+// const { PromptTemplate } = require("langchain/prompts");
 const { z } = require("zod");
 
 // Define the structured output schema
