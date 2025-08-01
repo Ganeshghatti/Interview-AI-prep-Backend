@@ -173,8 +173,7 @@ const analysisSchema = z.object({
 });
 
 const model = new ChatGoogleGenerativeAI({
-  model: "gemini-2.0-flash",
-  temperature: 0,
+  model: "gemini-1.5-flash",
 });
 
 const analyseInterview = async (
