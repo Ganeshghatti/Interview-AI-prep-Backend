@@ -70,37 +70,33 @@ exports.startInterviewPrep = async (req, res) => {
     const timeUntilEnd = endTime - Date.now();
     setTimeout(async () => {
       try {
-        const updatedPrep = await InterviewPrep.findByIdAndUpdate(
-          interviewPrep._id,
-          { status: "Completed" },
-          { new: true }
-        );
-        console.log(
-          `Interview ${interviewPrep._id} status updated to Completed`
-        );
-
-        // Fetch the full interview with jobRole
-        const fullInterview = await InterviewPrep.findById(
-          interviewPrep._id
+        const interview = await InterviewPrep.findById(
+          "688b7800c17479cc6bac5e99"
         ).populate("jobRoleId");
-        if (fullInterview) {
+
+        if (!interview) {
+          return res.status(404).json({
+            success: false,
+            message: "Interview not found",
+          });
+        }
+
+        if (interview) {
           // Get structured analysis
           const analysis = await analyseInterview(
-            fullInterview.jobRoleId,
-            fullInterview.conversation,
-            fullInterview.difficulty,
-            fullInterview.duration
+            interview.jobRoleId.title,
+            interview.conversation,
+            interview.difficulty,
+            interview.duration
           );
 
           // Save to analytics field
-          fullInterview.analytics = {
-            analysis,
-            generatedAt: new Date(),
-            interviewId: fullInterview._id,
-          };
-          await fullInterview.save();
+          interview.analytics = analysis;
+          interview.status = "completed";
+
+          await interview.save();
           console.log(
-            `Structured analysis saved for interview ${fullInterview._id}`
+            `Structured analysis saved for interview ${interview._id}`
           );
         }
       } catch (error) {
@@ -190,7 +186,7 @@ ${interview.conversation
 
   `;
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
     const model = genAI.getGenerativeModel({
       model: "gemini-2.0-pro",
       temperature: 0.2,

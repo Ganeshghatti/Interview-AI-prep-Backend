@@ -1,53 +1,180 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { ChatGoogleGenerativeAI } = require("@langchain/google-genai");
-// const { StructuredOutputParser } = require("langchain/output_parsers");
-// const { PromptTemplate } = require("langchain/prompts");
+const { StructuredOutputParser } = require("@langchain/core/output_parsers");
+const { ChatPromptTemplate } = require("@langchain/core/prompts");
 const { z } = require("zod");
 
 // Define the structured output schema
 const analysisSchema = z.object({
+  // Overall Performance Metrics
   overallScore: z
     .number()
     .min(0)
     .max(100)
     .describe("Overall performance score out of 100"),
-  communicationSkills: z.object({
-    score: z.number().min(0).max(100),
-    strengths: z.array(z.string()),
-    weaknesses: z.array(z.string()),
-    suggestions: z.array(z.string()),
-  }),
-  technicalKnowledge: z.object({
-    score: z.number().min(0).max(100),
-    strengths: z.array(z.string()),
-    weaknesses: z.array(z.string()),
-    suggestions: z.array(z.string()),
-  }),
-  problemSolving: z.object({
-    score: z.number().min(0).max(100),
-    strengths: z.array(z.string()),
-    weaknesses: z.array(z.string()),
-    suggestions: z.array(z.string()),
-  }),
-  confidenceLevel: z.enum(["Low", "Medium", "High"]),
-  responseQuality: z.object({
-    clarity: z.number().min(0).max(100),
-    relevance: z.number().min(0).max(100),
-    completeness: z.number().min(0).max(100),
-  }),
-  keyStrengths: z.array(z.string()),
-  areasForImprovement: z.array(z.string()),
-  specificFeedback: z.array(
-    z.object({
-      question: z.string(),
-      response: z.string(),
-      feedback: z.string(),
+
+  // Detailed Performance Categories
+  performanceMetrics: z.object({
+    communicationSkills: z.object({
       score: z.number().min(0).max(100),
+      clarity: z.number().min(0).max(100),
+      articulation: z.number().min(0).max(100),
+      listeningSkills: z.number().min(0).max(100),
+      nonVerbalCommunication: z.number().min(0).max(100),
+      strengths: z.array(z.string()),
+      weaknesses: z.array(z.string()),
+      improvements: z.array(z.string()),
+    }),
+
+    technicalCompetency: z.object({
+      score: z.number().min(0).max(100),
+      domainKnowledge: z.number().min(0).max(100),
+      practicalApplication: z.number().min(0).max(100),
+      industryAwareness: z.number().min(0).max(100),
+      toolsProficiency: z.number().min(0).max(100),
+      strengths: z.array(z.string()),
+      gaps: z.array(z.string()),
+      recommendations: z.array(z.string()),
+    }),
+
+    problemSolvingAbility: z.object({
+      score: z.number().min(0).max(100),
+      analyticalThinking: z.number().min(0).max(100),
+      creativity: z.number().min(0).max(100),
+      structuredApproach: z.number().min(0).max(100),
+      decisionMaking: z.number().min(0).max(100),
+      strengths: z.array(z.string()),
+      areas: z.array(z.string()),
+      suggestions: z.array(z.string()),
+    }),
+
+    behavioralAssessment: z.object({
+      score: z.number().min(0).max(100),
+      leadership: z.number().min(0).max(100),
+      teamwork: z.number().min(0).max(100),
+      adaptability: z.number().min(0).max(100),
+      initiative: z.number().min(0).max(100),
+      conflictResolution: z.number().min(0).max(100),
+      strengths: z.array(z.string()),
+      concerns: z.array(z.string()),
+      development: z.array(z.string()),
+    }),
+  }),
+
+  // Question-by-Question Analysis
+  questionAnalysis: z.array(
+    z.object({
+      questionNumber: z.number(),
+      questionType: z.enum([
+        "Behavioral",
+        "Technical",
+        "Situational",
+        "Experience",
+        "Hypothetical",
+      ]),
+      question: z.string(),
+      candidateResponse: z.string(),
+      responseScore: z.number().min(0).max(100),
+      responseTime: z.string().optional(),
+      strengths: z.array(z.string()),
+      improvements: z.array(z.string()),
+      detailedFeedback: z.string(),
+      keyPoints: z.array(z.string()),
     })
   ),
-  recommendations: z.array(z.string()),
-  interviewSummary: z.string(),
-  nextSteps: z.array(z.string()),
+
+  // Competency Radar Chart Data
+  competencyRadar: z.object({
+    technicalSkills: z.number().min(0).max(100),
+    communication: z.number().min(0).max(100),
+    problemSolving: z.number().min(0).max(100),
+    leadership: z.number().min(0).max(100),
+    teamwork: z.number().min(0).max(100),
+    adaptability: z.number().min(0).max(100),
+    creativity: z.number().min(0).max(100),
+    analyticalThinking: z.number().min(0).max(100),
+  }),
+
+  // Interview Flow Analysis
+  interviewFlow: z.object({
+    totalDuration: z.number(),
+    questionsAsked: z.number(),
+    averageQuestionGap: z.number(),
+    conversationFlow: z.enum(["Excellent", "Good", "Average", "Poor"]),
+    engagement: z.enum(["High", "Medium", "Low"]),
+    interviewRhythm: z.string(),
+  }),
+
+  // Strengths and Improvement Areas
+  keyInsights: z.object({
+    topStrengths: z.array(
+      z.object({
+        area: z.string(),
+        description: z.string(),
+        evidence: z.array(z.string()),
+        impact: z.enum(["High", "Medium", "Low"]),
+      })
+    ),
+    criticalImprovements: z.array(
+      z.object({
+        area: z.string(),
+        description: z.string(),
+        priority: z.enum(["High", "Medium", "Low"]),
+        actionItems: z.array(z.string()),
+        resources: z.array(z.string()),
+      })
+    ),
+  }),
+
+  // Role Fit Assessment
+  roleFitAnalysis: z.object({
+    overallFit: z.number().min(0).max(100),
+    roleReadiness: z.enum([
+      "Ready",
+      "Nearly Ready",
+      "Needs Development",
+      "Not Ready",
+    ]),
+    experienceAlignment: z.number().min(0).max(100),
+    skillsMatch: z.number().min(0).max(100),
+    culturalFit: z.number().min(0).max(100),
+    growthPotential: z.number().min(0).max(100),
+    riskFactors: z.array(z.string()),
+    positiveIndicators: z.array(z.string()),
+  }),
+
+  // Recommendations and Next Steps
+  actionPlan: z.object({
+    immediateActions: z.array(
+      z.object({
+        action: z.string(),
+        timeline: z.string(),
+        priority: z.enum(["High", "Medium", "Low"]),
+        resources: z.array(z.string()),
+      })
+    ),
+    longTermDevelopment: z.array(
+      z.object({
+        goal: z.string(),
+        timeline: z.string(),
+        steps: z.array(z.string()),
+        measurableOutcomes: z.array(z.string()),
+      })
+    ),
+    trainingRecommendations: z.array(
+      z.object({
+        skillArea: z.string(),
+        trainingType: z.string(),
+        priority: z.enum(["High", "Medium", "Low"]),
+        expectedOutcome: z.string(),
+      })
+    ),
+  }),
+});
+
+const model = new ChatGoogleGenerativeAI({
+  model: "gemini-2.0-flash",
+  temperature: 0,
 });
 
 const analyseInterview = async (
@@ -57,56 +184,89 @@ const analyseInterview = async (
   duration
 ) => {
   try {
-    const llm = new ChatGoogleGenerativeAI({
-      model: "gemini-2.0-pro",
-      temperature: 0.2,
-      maxOutputTokens: 4000,
-    });
+    const structuredLlm = model.withStructuredOutput(analysisSchema);
 
-//     const parser = StructuredOutputParser.fromZodSchema(analysisSchema);
+    const formattedConversation = conversation
+      .map((msg, index) => {
+        const timestamp = msg.timestamp
+          ? new Date(msg.timestamp).toLocaleTimeString()
+          : "Unknown time";
+        return `[${index + 1}] ${msg.role.toUpperCase()} (${timestamp}): ${
+          msg.content
+        }`;
+      })
+      .join("\n\n");
 
-//     const formatInstructions = parser.getFormatInstructions();
+    const prompt = `
+    You are an expert interview analyst with deep expertise in talent assessment, behavioral psychology, and role-specific competency evaluation. Analyze the following interview conversation and provide a comprehensive, data-driven assessment.
 
-//     const prompt = new PromptTemplate({
-//       template: `You are an expert interview analyst. Analyze the following interview conversation and provide a detailed, structured assessment.
+**INTERVIEW CONTEXT:**
+- Job Role: ${jobRole}
+- Difficulty Level: ${difficulty}
+- Scheduled Duration: ${duration} minutes
 
-// Job Role: {jobRole}
-// Difficulty: {difficulty}
-// Duration: {duration} minutes
+**CONVERSATION TRANSCRIPT:**
+${formattedConversation}
 
-// Conversation:
-// {conversation}
+**ANALYSIS REQUIREMENTS:**
 
-// Analyze the candidate's performance and provide detailed feedback in the following structured format:
+1. **Comprehensive Scoring**: Evaluate all performance dimensions with numerical scores (0-100)
+2. **Evidence-Based Assessment**: Support all scores and observations with specific examples from the conversation
+3. **Role-Specific Evaluation**: Tailor assessment criteria to the specific job role requirements
+4. **Actionable Insights**: Provide concrete, implementable recommendations
+5. **Data-Driven Metrics**: Include quantitative measures wherever possible
+6. **Frontend-Ready Structure**: Organize data for easy visualization and presentation
 
-// {format_instructions}
+**EVALUATION FOCUS AREAS:**
 
-// Focus on:
-// 1. Communication skills (clarity, articulation, confidence)
-// 2. Technical knowledge relevant to the role
-// 3. Problem-solving abilities
-// 4. Response quality and relevance
-// 5. Specific examples from the conversation
-// 6. Actionable recommendations for improvement
+**Communication Assessment:**
+- Clarity of expression and articulation
+- Listening skills and response relevance
+- Professional communication style
+- Confidence and engagement level
 
-// Be thorough, constructive, and professional in your analysis.`,
-//       inputVariables: ["jobRole", "conversation", "difficulty", "duration"],
-//       partialVariables: { format_instructions: formatInstructions },
-//     });
+**Technical Competency:**
+- Domain knowledge demonstration
+- Practical application of skills
+- Industry awareness and trends
+- Tools and technology proficiency
 
-//     const input = await prompt.format({
-//       jobRole: JSON.stringify(jobRole, null, 2),
-//       conversation: conversation
-//         .map((msg) => `${msg.role}: ${msg.content}`)
-//         .join("\n"),
-//       difficulty,
-//       duration,
-//     });
+**Problem-Solving Evaluation:**
+- Analytical thinking patterns
+- Creative solution approaches
+- Structured problem breakdown
+- Decision-making process
 
-//     const response = await llm.invoke(input);
-//     const analysis = await parser.parse(response.content);
+**Behavioral Analysis:**
+- Leadership potential indicators
+- Team collaboration skills
+- Adaptability and flexibility
+- Initiative and proactivity
 
-    return true;
+**Response Quality Metrics:**
+- Relevance to questions asked
+- Completeness of answers
+- Depth of knowledge demonstrated
+- Structure and organization
+
+**Role Fit Assessment:**
+- Alignment with job requirements
+- Experience relevance
+- Skill gap analysis
+- Growth potential evaluation
+
+Provide a thorough, professional analysis that would be valuable for both the candidate's development and hiring decision-making. Ensure all numerical scores are realistic and well-justified based on the actual conversation content.
+
+Generate the analysis in the specified structured format with comprehensive data points for frontend visualization.
+    `;
+
+    console.log(prompt);
+
+    const response = await structuredLlm.invoke(prompt);
+
+    console.log(response);
+
+    return response;
   } catch (error) {
     console.error("Error in analyseInterview:", error);
     throw error;
