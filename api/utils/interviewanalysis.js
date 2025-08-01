@@ -20,9 +20,6 @@ const analysisSchema = z.object({
       clarity: z.number().min(0).max(100),
       articulation: z.number().min(0).max(100),
       listeningSkills: z.number().min(0).max(100),
-      nonVerbalCommunication: z.number().min(0).max(100),
-      strengths: z.array(z.string()),
-      weaknesses: z.array(z.string()),
       improvements: z.array(z.string()),
     }),
 
@@ -32,8 +29,6 @@ const analysisSchema = z.object({
       practicalApplication: z.number().min(0).max(100),
       industryAwareness: z.number().min(0).max(100),
       toolsProficiency: z.number().min(0).max(100),
-      strengths: z.array(z.string()),
-      gaps: z.array(z.string()),
       recommendations: z.array(z.string()),
     }),
 
@@ -43,8 +38,6 @@ const analysisSchema = z.object({
       creativity: z.number().min(0).max(100),
       structuredApproach: z.number().min(0).max(100),
       decisionMaking: z.number().min(0).max(100),
-      strengths: z.array(z.string()),
-      areas: z.array(z.string()),
       suggestions: z.array(z.string()),
     }),
 
@@ -55,8 +48,6 @@ const analysisSchema = z.object({
       adaptability: z.number().min(0).max(100),
       initiative: z.number().min(0).max(100),
       conflictResolution: z.number().min(0).max(100),
-      strengths: z.array(z.string()),
-      concerns: z.array(z.string()),
       development: z.array(z.string()),
     }),
   }),
@@ -75,11 +66,8 @@ const analysisSchema = z.object({
       question: z.string(),
       candidateResponse: z.string(),
       responseScore: z.number().min(0).max(100),
-      responseTime: z.string().optional(),
       strengths: z.array(z.string()),
       improvements: z.array(z.string()),
-      detailedFeedback: z.string(),
-      keyPoints: z.array(z.string()),
     })
   ),
 
@@ -91,18 +79,14 @@ const analysisSchema = z.object({
     leadership: z.number().min(0).max(100),
     teamwork: z.number().min(0).max(100),
     adaptability: z.number().min(0).max(100),
-    creativity: z.number().min(0).max(100),
-    analyticalThinking: z.number().min(0).max(100),
   }),
 
   // Interview Flow Analysis
   interviewFlow: z.object({
-    totalDuration: z.number(),
     questionsAsked: z.number(),
     averageQuestionGap: z.number(),
     conversationFlow: z.enum(["Excellent", "Good", "Average", "Poor"]),
     engagement: z.enum(["High", "Medium", "Low"]),
-    interviewRhythm: z.string(),
   }),
 
   // Strengths and Improvement Areas
@@ -110,7 +94,6 @@ const analysisSchema = z.object({
     topStrengths: z.array(
       z.object({
         area: z.string(),
-        description: z.string(),
         evidence: z.array(z.string()),
         impact: z.enum(["High", "Medium", "Low"]),
       })
@@ -118,7 +101,6 @@ const analysisSchema = z.object({
     criticalImprovements: z.array(
       z.object({
         area: z.string(),
-        description: z.string(),
         priority: z.enum(["High", "Medium", "Low"]),
         actionItems: z.array(z.string()),
         resources: z.array(z.string()),
@@ -139,8 +121,6 @@ const analysisSchema = z.object({
     skillsMatch: z.number().min(0).max(100),
     culturalFit: z.number().min(0).max(100),
     growthPotential: z.number().min(0).max(100),
-    riskFactors: z.array(z.string()),
-    positiveIndicators: z.array(z.string()),
   }),
 
   // Recommendations and Next Steps
@@ -150,7 +130,6 @@ const analysisSchema = z.object({
         action: z.string(),
         timeline: z.string(),
         priority: z.enum(["High", "Medium", "Low"]),
-        resources: z.array(z.string()),
       })
     ),
     longTermDevelopment: z.array(
@@ -158,7 +137,6 @@ const analysisSchema = z.object({
         goal: z.string(),
         timeline: z.string(),
         steps: z.array(z.string()),
-        measurableOutcomes: z.array(z.string()),
       })
     ),
     trainingRecommendations: z.array(
@@ -166,14 +144,13 @@ const analysisSchema = z.object({
         skillArea: z.string(),
         trainingType: z.string(),
         priority: z.enum(["High", "Medium", "Low"]),
-        expectedOutcome: z.string(),
       })
     ),
   }),
 });
 
 const model = new ChatGoogleGenerativeAI({
-  model: "gemini-1.5-flash",
+  model: "gemini-2.0-flash",
 });
 
 const analyseInterview = async (
