@@ -1,4 +1,5 @@
 const JobPosition = require("../../models/job-positions");
+const JobRole = require("../../models/job-roles");
 
 exports.createJobPosition = async (req, res) => {
   try {
@@ -32,30 +33,61 @@ exports.createJobPosition = async (req, res) => {
       });
     }
 
-    const jobPosition = await JobPosition.create({
-      title,
-      description,
-      company,
-      jobLink,
-      companyWebsite,
-      location,
-      type,
-      level,
-      jobRole,
-      salaryRange,
-      equityOffered,
-      bonusIncluded,
-      contractDuration,
-      responsibilities,
-      requirements,
-      preferredQualifications,
-      benefits,
-      applicationUrl,
-      closingDate,
-      status,
-    });
+    const role = await JobRole.findOne({title: jobRole} || {_id: jobRole});
+
+    if(role){
+      const newJobPosition = await JobPosition.create({
+        title,
+        description,
+        company,
+        jobLink,
+        companyWebsite,
+        location,
+        type,
+        level,
+        jobRole: role._id,
+        salaryRange,
+        equityOffered,
+        bonusIncluded,
+        contractDuration,
+        responsibilities,
+        requirements,
+        preferredQualifications,
+        benefits,
+        applicationUrl,
+        closingDate,
+        status,
+      });
+      res.status(201).json({ success: true, message: "Job position in existing job role created successfully", newJobPosition });
+    }
+    else{
+      const newRole = await JobRole.create({title: jobRole});
+      const newJobPosition = await JobPosition.create({
+        title,
+        description,
+        company,
+        jobLink,
+        companyWebsite,
+        location,
+        type,
+        level,
+        jobRole: newRole._id,
+        salaryRange,
+        equityOffered,
+        bonusIncluded,
+        contractDuration,
+        responsibilities,
+        requirements,
+        preferredQualifications,
+        benefits,
+        applicationUrl,
+        closingDate,
+        status,
+      });
+      res.status(201).json({ success: true, message: "Job position and Job role created successfully", newJobPosition, newRole });
+    }
     
-    res.status(201).json({ success: true, jobPosition });
+    
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
