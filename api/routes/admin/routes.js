@@ -1,21 +1,21 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const { adminLogin, adminRegister } = require("../../controllers/admin/auth");
-const {
+import { adminLogin, adminRegister } from "../../controllers/admin/auth.js";
+import {
   createJobRole,
   getJobRoles,
   getJobRoleById,
   updateJobRole,
   deleteJobRole,
-} = require("../../controllers/admin/job-roles");
-const {
+} from "../../controllers/admin/job-roles.js";
+import {
   createJobPosition,
   getJobPositions,
   getJobPositionById,
   updateJobPosition,
   deleteJobPosition,
-} = require("../../controllers/admin/job-positions");
-const adminAuth = require("../../middleware/admin-auth");
+} from "../../controllers/admin/job-positions.js";
+import adminAuth from "../../middleware/admin-auth.js";
 
 router.route("/login").post(adminLogin);
 router.route("/register").post(adminRegister);
@@ -24,7 +24,7 @@ router.route("/register").post(adminRegister);
 router
   .route("/job-roles")
   .post(adminAuth, createJobRole)
-  .get(adminAuth, getJobRoles)
+  .get(adminAuth, getJobRoles);
 
 router.route("/job-roles/:id").get(adminAuth, getJobRoleById);
 router.route("/job-roles/:id").put(adminAuth, updateJobRole);
@@ -42,4 +42,4 @@ router
   .put(adminAuth, updateJobPosition)
   .delete(adminAuth, deleteJobPosition);
 
-module.exports = router;
+export default router;

@@ -1,8 +1,8 @@
-const jwt = require("jsonwebtoken");
-const Admin = require("../../models/admin");
-const bcrypt = require("bcryptjs");
+import jwt from "jsonwebtoken";
+import Admin from "../../models/admin.js";
+import bcrypt from "bcryptjs";
 
-exports.adminRegister = async (req, res) => {
+export const adminRegister = async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
     if (!name || !email || !phone || !password) {
@@ -29,7 +29,7 @@ exports.adminRegister = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-exports.adminLogin = async (req, res) => {
+export const adminLogin = async (req, res) => {
   try {
     const { phone, password } = req.body;
 

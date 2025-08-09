@@ -1,12 +1,12 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const {
+import {
   getAllActiveJobRoles,
   startInterviewPrep,
   getInterviewPrepById,
-  inprogressInterview
-} = require("../../controllers/interview-prep/take-interview");
-const userAuth = require("../../middleware/user-auth");
+  inprogressInterview,
+} from "../../controllers/interview-prep/take-interview.js";
+import userAuth from "../../middleware/user-auth.js";
 
 router.route("/get-active-job-roles").get(userAuth, getAllActiveJobRoles);
 router
@@ -16,4 +16,4 @@ router
 router.route("/interview/:interviewId").get(userAuth, getInterviewPrepById);
 router.route("/interview/:interviewId").post(userAuth, inprogressInterview);
 
-module.exports = router;
+export default router;

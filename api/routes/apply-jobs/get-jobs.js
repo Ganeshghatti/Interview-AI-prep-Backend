@@ -1,10 +1,10 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const {
+import {
   getAllActiveJobPositions,
-} = require("../../controllers/apply-jobs/get-jobs");
-const userAuth = require("../../middleware/user-auth");
+} from "../../controllers/apply-jobs/get-jobs.js";
+import userAuth from "../../middleware/user-auth.js";
 
 router.route("/get-active-job-positions").get(userAuth, getAllActiveJobPositions);
 
-module.exports = router;
+export default router;

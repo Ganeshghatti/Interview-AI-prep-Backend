@@ -1,6 +1,6 @@
-const User = require("../../models/user");
+import User from "../../models/user.js";
 
-exports.UserProfile = async (req, res) => {
+export const UserProfile = async (req, res) => {
   try {
     const userId = req.user.id; // Assuming user ID is stored in req.user after authentication
 

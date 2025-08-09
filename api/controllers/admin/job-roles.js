@@ -1,6 +1,6 @@
-const JobRole = require("../../models/job-roles");
+import JobRole from "../../models/job-roles.js";
 
-exports.createJobRole = async (req, res) => {
+export const createJobRole = async (req, res) => {
   try {
     const {
       title,
@@ -35,7 +35,7 @@ exports.createJobRole = async (req, res) => {
   }
 };
 
-exports.getJobRoles = async (req, res) => {
+export const getJobRoles = async (req, res) => {
   try {
     const jobRoles = await JobRole.find();
     res.status(200).json({ success: true, jobRoles });
@@ -44,7 +44,7 @@ exports.getJobRoles = async (req, res) => {
   }
 };
 
-exports.getJobRoleById = async (req, res) => {
+export const getJobRoleById = async (req, res) => {
   try {
     const { id } = req.params;
     const jobRole = await JobRole.findById(id);
@@ -62,7 +62,7 @@ exports.getJobRoleById = async (req, res) => {
   }
 };
 
-exports.updateJobRole = async (req, res) => {
+export const updateJobRole = async (req, res) => {
   try {
     const { id } = req.params;
     const {
@@ -98,7 +98,7 @@ exports.updateJobRole = async (req, res) => {
   }
 };
 
-exports.deleteJobRole = async (req, res) => {
+export const deleteJobRole = async (req, res) => {
   try {
     const { id } = req.params;
 

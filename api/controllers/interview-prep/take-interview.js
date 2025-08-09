@@ -1,13 +1,13 @@
-const JobRole = require("../../models/job-roles");
-const InterviewPrep = require("../../models/interview-prep");
-const User = require("../../models/user");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const uuid = require("uuid").v4;
-const path = require("path");
-const fs = require("fs");
-const axios = require("axios");
-const { ElevenLabsClient } = require("@elevenlabs/elevenlabs-js");
-const { analyseInterview } = require("../../utils/interviewanalysis");
+import JobRole from "../../models/job-roles.js";
+import InterviewPrep from "../../models/interview-prep.js";
+import User from "../../models/user.js";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { v4 as uuidv4 } from "uuid";
+import path from "path";
+import fs from "fs";
+import axios from "axios";
+import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
+import { analyseInterview } from "../../utils/interviewanalysis.js";
 
 const testanalysis = async () => {
   try {
@@ -26,7 +26,7 @@ const testanalysis = async () => {
 
       // Save to analytics field
       interview.analytics = analysis;
-      interview.status = "completed"; 
+      interview.status = "completed";
       await interview.save();
       console.log(`Structured analysis saved for interview ${interview._id}`);
     }
@@ -41,7 +41,7 @@ const elevenlabs = new ElevenLabsClient({
   apiKey: process.env.ELEVEN_LABS_KEY,
 });
 
-exports.getAllActiveJobRoles = async (req, res) => {
+export const getAllActiveJobRoles = async (req, res) => {
   try {
     const jobRoles = await JobRole.find({ status: "Active" });
     res.status(200).json({ success: true, jobRoles });
@@ -50,7 +50,7 @@ exports.getAllActiveJobRoles = async (req, res) => {
   }
 };
 
-exports.startInterviewPrep = async (req, res) => {
+export const startInterviewPrep = async (req, res) => {
   try {
     const { jobRoleId, userId } = req.params;
     const { duration, difficulty } = req.body;
@@ -144,7 +144,7 @@ exports.startInterviewPrep = async (req, res) => {
   }
 };
 
-exports.inprogressInterview = async (req, res) => {
+export const inprogressInterview = async (req, res) => {
   try {
     const { interviewId } = req.params;
     const { text } = req.body;
@@ -284,7 +284,7 @@ ${interview.conversation
   }
 };
 
-exports.getInterviewPrepById = async (req, res) => {
+export const getInterviewPrepById = async (req, res) => {
   try {
     const { interviewId } = req.params;
 

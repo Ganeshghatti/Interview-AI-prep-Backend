@@ -1,7 +1,8 @@
-require("dotenv").config();
-const { ChatGoogleGenerativeAI } = require("@langchain/google-genai");
-const {z} = require("zod");
-const cheerio = require('cheerio');
+import dotenv from "dotenv";
+dotenv.config();
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+import { z } from "zod";
+import cheerio from 'cheerio';
 
 const SCRAPPER_API_KEY = process.env.SCRAPPER_API_KEY;
 
@@ -133,5 +134,5 @@ async function scrappedDataForJobPosition(url) {
   return jobData;
 };
 
-module.exports = {scrappedDataForJobPosition};
+export { scrappedDataForJobPosition };
 

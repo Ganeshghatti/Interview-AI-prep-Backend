@@ -1,7 +1,7 @@
-const { scrapApplyLinks } = require("./puppeteerScrapper");
-const { scrappedDataForJobPosition } = require("./jobScrapper");
+import { scrapApplyLinks } from "./puppeteerScrapper.js";
+import { scrappedDataForJobPosition } from "./jobScrapper.js";
 
-const axios = require("axios");
+import axios from "axios";
 
 async function main(query) {
     const applyLinks = await scrapApplyLinks(query);
