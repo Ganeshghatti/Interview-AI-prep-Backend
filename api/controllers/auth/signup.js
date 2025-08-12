@@ -1,11 +1,11 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../../models/user");
-const OTP = require("../../models/otp");
-const validator = require("validator");
-const sendSMS = require("../../utils/sms");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "../../models/user.js";
+import OTP from "../../models/otp.js";
+import validator from "validator";
+import { sendSMS } from "../../utils/sms.js";
 
-exports.sendSignupOtp = async (req, res) => {
+export const sendSignupOtp = async (req, res) => {
   try {
     const { phone, email, name, password } = req.body;
 
@@ -66,7 +66,7 @@ exports.sendSignupOtp = async (req, res) => {
   }
 };
 
-exports.verifySignupOtp = async (req, res) => {
+export const verifySignupOtp = async (req, res) => {
   try {
     const { phone, otp, password, name, email } = req.body;
 

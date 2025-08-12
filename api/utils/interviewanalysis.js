@@ -1,9 +1,11 @@
-require("dotenv").config();
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { ChatGoogleGenerativeAI } = require("@langchain/google-genai");
-const { StructuredOutputParser } = require("@langchain/core/output_parsers");
-const { ChatPromptTemplate } = require("@langchain/core/prompts");
-const { z } = require("zod");
+import dotenv from "dotenv";
+dotenv.config();
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+import { StructuredOutputParser } from "@langchain/core/output_parsers";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { z } from "zod";
+
 
 // Define the structured output schema
 const analysisSchema = z.object({
@@ -251,6 +253,6 @@ Generate the analysis in the specified structured format with comprehensive data
   }
 };
 
-module.exports = {
+export {
   analyseInterview,
 };

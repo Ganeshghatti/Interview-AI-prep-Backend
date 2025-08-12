@@ -1,5 +1,5 @@
 // models/JobRole.js
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const jobRoleSchema = new mongoose.Schema({
   title: {
@@ -57,4 +57,4 @@ const jobRoleSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("JobRole", jobRoleSchema);
+export default mongoose.model("JobRole", jobRoleSchema);

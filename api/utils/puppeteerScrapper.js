@@ -1,4 +1,4 @@
-const puppeteer = require("puppeteer");
+import puppeteer from "puppeteer";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -166,4 +166,4 @@ async function scrapApplyLinks(query) {
   }
 }
 
-module.exports = {scrapApplyLinks};
+export {scrapApplyLinks};

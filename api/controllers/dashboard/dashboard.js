@@ -1,9 +1,9 @@
-const JobPosition = require("../../models/job-positions");
-const InterviewPrep = require("../../models/interview-prep");
-const User = require("../../models/user");
-const JobRole = require("../../models/job-roles");
+import JobPosition from "../../models/job-positions.js";
+import InterviewPrep from "../../models/interview-prep.js";
+import User from "../../models/user.js";
+import JobRole from "../../models/job-roles.js";
 
-exports.getUserDashboard = async (req, res) => {
+export const getUserDashboard = async (req, res) => {
   try {
     const userId = req.user.id;
 

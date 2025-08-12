@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const InterviewPrepSchema = new mongoose.Schema({
   jobRoleId: {
@@ -45,4 +45,4 @@ const InterviewPrepSchema = new mongoose.Schema({
     default: null,
   },
 });
-module.exports = mongoose.model("InterviewPrep", InterviewPrepSchema);
+export default mongoose.model("InterviewPrep", InterviewPrepSchema);

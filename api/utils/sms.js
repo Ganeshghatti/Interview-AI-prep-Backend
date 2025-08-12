@@ -1,5 +1,6 @@
-const twilio = require("twilio");
-require("dotenv").config();
+import twilio from "twilio";
+import dotenv from "dotenv";
+dotenv.config();
 
 const client = twilio(
   process.env.TWILIO_ACCOUNT_SID,
@@ -18,4 +19,4 @@ const sendSMS = async (phone, otp) => {
   }
 };
 
-module.exports = sendSMS;
+export { sendSMS };

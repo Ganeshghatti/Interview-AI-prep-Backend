@@ -1,6 +1,6 @@
-const JobPosition = require("../../models/job-positions");
+import JobPosition from "../../models/job-positions.js";
 
-exports.getAllActiveJobPositions = async (req, res) => {
+export const getAllActiveJobPositions = async (req, res) => {
   try {
     const jobPositions = await JobPosition.find({ status: "Active" });
     res.status(200).json({ success: true, jobPositions });

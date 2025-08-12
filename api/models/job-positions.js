@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const jobPositionSchema = new mongoose.Schema({
   title: {
@@ -96,4 +96,4 @@ const jobPositionSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("JobPosition", jobPositionSchema);
+export default mongoose.model("JobPosition", jobPositionSchema);
