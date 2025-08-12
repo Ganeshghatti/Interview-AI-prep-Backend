@@ -5,7 +5,7 @@ const {
   verifySignupOtp,
 } = require("../../controllers/auth/signup");
 const { Login } = require("../../controllers/auth/login");
-const { UserProfile } = require("../../controllers/auth/user");
+const { UserProfile, updateUserProfile, deleteUserProfile } = require("../../controllers/auth/user");
 const rateLimit = require("express-rate-limit");
 const { ipKeyGenerator } = require("express-rate-limit");
 const userAuth = require("../../middleware/user-auth");
@@ -28,5 +28,9 @@ const otpLimiter = rateLimit({
 router.route("/signup/send-otp").post(otpLimiter, sendSignupOtp);
 router.route("/signup/verify-otp").post(verifySignupOtp);
 router.route("/login").post(Login);
-router.route("/user/profile").get(userAuth, UserProfile);
+router
+  .route("/user/profile")
+    .get(userAuth, UserProfile)
+    .put(userAuth, updateUserProfile)
+    .delete(userAuth, deleteUserProfile);
 module.exports = router;

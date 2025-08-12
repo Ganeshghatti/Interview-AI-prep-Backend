@@ -91,7 +91,7 @@ const jobPositionSchema = z.object({
 const model = new ChatGoogleGenerativeAI({
   model: "gemini-2.0-flash",
   temperature: 0,
-  apiKey: process.env.GEMINI_API_KEY
+  apiKey: process.env.GOOGLE_API_KEY
 });
 
 const analyseJobPosition = async (rawHTMLContent) => {

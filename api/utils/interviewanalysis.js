@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { ChatGoogleGenerativeAI } = require("@langchain/google-genai");
 const { StructuredOutputParser } = require("@langchain/core/output_parsers");
@@ -151,6 +152,7 @@ const analysisSchema = z.object({
 
 const model = new ChatGoogleGenerativeAI({
   model: "gemini-2.0-flash",
+  apiKey: process.env.GOOGLE_API_KEY
 });
 
 const analyseInterview = async (
