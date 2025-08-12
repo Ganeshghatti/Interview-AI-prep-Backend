@@ -5,6 +5,7 @@ import {
   startInterviewPrep,
   getInterviewPrepById,
   inprogressInterview,
+  manuallyEndInterview
 } from "../../controllers/interview-prep/take-interview.js";
 import userAuth from "../../middleware/user-auth.js";
 
@@ -15,5 +16,6 @@ router
 
 router.route("/interview/:interviewId").get(userAuth, getInterviewPrepById);
 router.route("/interview/:interviewId").post(userAuth, inprogressInterview);
+router.route("/interview/:interviewId/end").post(userAuth, manuallyEndInterview);
 
 export default router;

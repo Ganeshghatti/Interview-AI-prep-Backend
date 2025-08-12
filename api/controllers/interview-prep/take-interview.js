@@ -99,7 +99,7 @@ export const startInterviewPrep = async (req, res) => {
     setTimeout(async () => {
       try {
         const interview = await InterviewPrep.findById(
-          "688b7800c17479cc6bac5e99"
+          interviewPrep._id
         ).populate("jobRoleId");
 
         if (!interview) {
@@ -300,6 +300,51 @@ export const getInterviewPrepById = async (req, res) => {
     }
 
     res.status(200).json({ success: true, interviewPrep });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const manuallyEndInterview = async (req, res) => {
+  try {
+    const { interviewId } = req.params;
+    const interview = await InterviewPrep.findById(interviewId).populate(
+      "jobRoleId",
+      "title"
+    );
+
+    if (!interview) {
+      return res.status(404).json({
+        success: false,
+        message: "Interview not found",
+      });
+    }
+
+    if (interview.status !== "in-progress") {
+      return res.status(400).json({
+        success: false,
+        message: "Interview is not in progress",
+      });
+    }
+
+    if (interview) {
+      // Get structured analysis
+      const analysis = await analyseInterview(
+        interview.jobRoleId.title,
+        interview.conversation,
+        interview.difficulty,
+        interview.duration
+      );
+
+      // Save to analytics field
+      interview.analytics = analysis;
+      interview.status = "completed";
+      await interview.save();
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "Interview ended successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
