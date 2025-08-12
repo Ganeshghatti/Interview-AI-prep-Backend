@@ -1,8 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config();
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { StructuredOutputParser } from "@langchain/core/output_parsers";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { z } from "zod";
+
 
 // Define the structured output schema
 const analysisSchema = z.object({
@@ -151,6 +154,7 @@ const analysisSchema = z.object({
 
 const model = new ChatGoogleGenerativeAI({
   model: "gemini-2.0-flash",
+  apiKey: process.env.GOOGLE_API_KEY
 });
 
 const analyseInterview = async (
