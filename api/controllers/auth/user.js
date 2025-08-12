@@ -16,7 +16,7 @@ export const UserProfile = async (req, res) => {
   }
 };
 
-exports.updateUserProfile = async (req, res) => {
+export const updateUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
     const updateData = { ...req.body };
@@ -58,7 +58,7 @@ exports.updateUserProfile = async (req, res) => {
   }
 };
 
-exports.deleteUserProfile = async (req, res) => {
+export const deleteUserProfile = async (req, res) => {
   try {
     const userId = req.user.id;
     await User.findByIdAndDelete(userId);
