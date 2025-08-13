@@ -9,6 +9,7 @@ import { UserProfile, updateUserProfile, deleteUserProfile } from "../../control
 import rateLimit from "express-rate-limit";
 import { ipKeyGenerator } from "express-rate-limit";
 import userAuth from "../../middleware/user-auth.js";
+import { profileData } from "../../controllers/auth/resumeExtraction.js";
 
 // OTP-specific rate limiting with enhanced rules to prevent abuse
 const otpLimiter = rateLimit({
@@ -33,5 +34,6 @@ router
     .get(userAuth, UserProfile)
     .put(userAuth, updateUserProfile)
     .delete(userAuth, deleteUserProfile);
+router.route("/resume/extract").post(userAuth, profileData);
 
 export default router;
