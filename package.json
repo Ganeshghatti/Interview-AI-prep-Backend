@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --build",
     "dev": "nodemon api/server.js",
-    "start": "node api/server.js"
+    "start": "node api/server.js",
+    "relay": "node api/utils/realtime-console/relay-server/index.js"
   },
   "keywords": [],
   "author": "",
