@@ -4,8 +4,8 @@ import {
   getAllActiveJobRoles,
   startInterviewPrep,
   getInterviewPrepById,
-  inprogressInterview,
-  manuallyEndInterview
+  // inprogressInterview,
+  endInterviewPrep
 } from "../../controllers/interview-prep/take-interview.js";
 import userAuth from "../../middleware/user-auth.js";
 
@@ -15,7 +15,7 @@ router
   .post(userAuth, startInterviewPrep);
 
 router.route("/interview/:interviewId").get(userAuth, getInterviewPrepById);
-router.route("/interview/:interviewId").post(userAuth, inprogressInterview);
-router.route("/interview/:interviewId/end").post(userAuth, manuallyEndInterview);
+// router.route("/interview/:interviewId").post(userAuth, inprogressInterview);
+router.route("/interview/:interviewId/end").post(userAuth, endInterviewPrep);
 
 export default router;
