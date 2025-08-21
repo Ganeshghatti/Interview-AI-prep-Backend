@@ -9,30 +9,30 @@ import axios from "axios";
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 import { analyseInterview } from "../../utils/interviewanalysis.js";
 
-async function testAnalysis (interviewId) {
-  try {
-    const interview = await InterviewPrep.findById(
-      // "688cb84cd49a2574e0230efc"
-      interviewId
-    ).populate("jobRoleId");
+// async function testAnalysis (interviewId) {
+//   try {
+//     const interview = await InterviewPrep.findById(
+//       // "688cb84cd49a2574e0230efc"
+//       interviewId
+//     ).populate("jobRoleId");
 
-    if (interview) {
-      // Get structured analysis
-      const analysis = await analyseInterview(
-        interview.jobRoleId.title,
-        interview.conversation,
-        interview.difficulty,
-        interview.duration
-      );
-      console.log(`Structured analysis saved for interview ${interview._id}`);
-      return analysis;
-    }
-  } catch (error) {
-    console.error(
-      `Error updating interview status or analysis: ${error.message}`
-    );
-  }
-};
+//     if (interview) {
+//       // Get structured analysis
+//       const analysis = await analyseInterview(
+//         interview.jobRoleId.title,
+//         interview.conversation,
+//         interview.difficulty,
+//         interview.duration
+//       );
+//       console.log(`Structured analysis saved for interview ${interview._id}`);
+//       return analysis;
+//     }
+//   } catch (error) {
+//     console.error(
+//       `Error updating interview status or analysis: ${error.message}`
+//     );
+//   }
+// };
 
 //const elevenlabs = new ElevenLabsClient({
 //   apiKey: process.env.ELEVEN_LABS_KEY,
@@ -333,10 +333,13 @@ export const endInterviewPrep = async (req, res) => {
 
 
       // Get structured analysis
-      const analysis = await testAnalysis(interview._id);
+       interview.analytics = await analyseInterview(
+        interview.jobRoleId.title,
+        interview.conversation,
+        interview.difficulty,
+        interview.duration
+      );
 
-      // Save to analytics field
-      interview.analytics = analysis;
       await interview.save();
     }
 
