@@ -337,8 +337,6 @@ export const endInterviewPrep = async (req, res) => {
 
       // Save to analytics field
       interview.analytics = analysis;
-      interview.status = "completed";
-      interview.endTime = new Date();
       await interview.save();
     }
 
