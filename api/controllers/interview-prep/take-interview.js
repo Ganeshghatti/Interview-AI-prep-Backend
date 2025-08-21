@@ -225,7 +225,7 @@ export const startInterviewPrep = async (req, res) => {
 //     const audio = await elevenlabs.textToSpeech.convert(
 //       "JBFqnCBsd6RMkjVDRZzb",
 //       {
-//         text: reply,
+//         text: reply, 
 //         modelId: "eleven_multilingual_v2",
 //         outputFormat: "mp3_44100_128",
 //       }
@@ -345,7 +345,7 @@ export const endInterviewPrep = async (req, res) => {
 
     res
       .status(200)
-      .json({ success: true, message: "Interview ended successfully" });
+      .json({ success: true, message: "Interview ended successfully", analytics: interview.analytics });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
