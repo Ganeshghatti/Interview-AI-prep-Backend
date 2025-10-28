@@ -32,7 +32,7 @@ export class RealtimeRelay {
 
     // Instantiate new client
     this.log(`Connecting with key "${this.apiKey.slice(0, 3)}..."`);
-    const client = new RealtimeClient({ url: "wss://api.soket.ai/dev/s2s", apiKey: "eyJraWQiOiJzLTAwZWYwYTdlLWEwNWYtNDUzNy1hNjIwLTNkZmFmOTU0OGEzZSIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJpYXQiOjE3NTQ3MTY2MTksImV4cCI6NDkwODcxNjYxOSwiaXNzIjoiaHR0cHM6Ly9hdXRoLnNva2V0LmFpIiwidXNlcl9pZCI6IjkxNDQ4NGUzLWM4MzUtNDRiOC1hODlkLWM5ZTI3YzAyYjEwZCIsInRva2VuX3JhdGVfbGltaXQiOjEwMDAwLCJyZXF1ZXN0X3JhdGVfbGltaXQiOjEwMH0.QvqXhW8HrXVZFCb7dZ0UzInsFlJUQZTcco5NTroJ_h7sSV1ZyP4glrKm-GkIMpE3L0W5FBQkPIpYIiQSYcjN8gMRcT-UnRq-NG1lRJIz6IRdEvst99nu99xZ2SQtRpjyMRyW4wcnicV7aP-7FV7RRdUWNtLYJ_IFyQoeIF4KvXhcD4ekjmPL9H1f9Wbpx7q9jHnomsumb_2E-YIzJhkm-LkK-E9dSCk9Cxk92_j4Ul7X6ISPdu4p3_ksrrcC2_j-zIIg9vzyomFsWzuJFtwAhGwp2dPtxAjca5pALDaMivdc3nOs7npfbxw0whv6NuZJRxlxcsj8BXVgmLKIl9dTkw" });
+    const client = new RealtimeClient({ url: "wss://api.soket.ai/dev/s2s", apiKey: this.apiKey });
 
     // Relay: OpenAI Realtime API Event -> Browser Event
     client.realtime.on('server.*', (event) => {
