@@ -38,6 +38,8 @@ import { analyseInterview } from "../../utils/interviewanalysis.js";
 //   apiKey: process.env.ELEVEN_LABS_KEY,
 // });
 
+
+
 export const getAllActiveJobRoles = async (req, res) => {
   try {
     const jobRoles = await JobRole.find({ status: "Active" });
@@ -46,6 +48,8 @@ export const getAllActiveJobRoles = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+//speech to speech in streaming format
 
 export const startInterviewPrep = async (req, res) => {
   try {
@@ -140,6 +144,8 @@ export const startInterviewPrep = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+
 
 // export const inprogressInterview = async (req, res) => {
 //   try {
@@ -280,6 +286,8 @@ export const startInterviewPrep = async (req, res) => {
 //     res.status(500).json({ success: false, message: error.message });
 //   }
 // };
+
+
 
 export const getInterviewPrepById = async (req, res) => {
   try {
