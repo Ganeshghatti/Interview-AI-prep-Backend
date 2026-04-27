@@ -11,7 +11,6 @@ export const Login = async (req, res) => {
         .status(400)
         .json({ success: false, msg: "Phone and password are required" });
     }
-
     const user = await User.findOne({ phone });
     if (!user)
       return res.status(404).json({ success: false, msg: "User not found" });
@@ -21,6 +20,7 @@ export const Login = async (req, res) => {
       return res
         .status(401)
         .json({ success: false, msg: "Invalid credentials" });
+    
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "24h",

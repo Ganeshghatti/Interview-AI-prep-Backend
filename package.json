@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --build",
     "dev": "nodemon api/server.js",
-    "start": "node api/server.js",
-    "relay": "node api/utils/relay-server/index.js"
+    "start": "node api/server.js"
   },
   "keywords": [],
   "author": "",
@@ -20,7 +19,6 @@
     "@langchain/core": "^0.3.66",
     "@langchain/google-genai": "^0.2.16",
     "@langchain/groq": "^0.2.3",
-    "@openai/realtime-api-beta": "github:soketlabs/openai-realtime-api-beta",
     "axios": "^1.11.0",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",

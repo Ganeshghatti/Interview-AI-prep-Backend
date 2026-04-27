@@ -9,7 +9,6 @@ import interviewPrepRoutes from "./routes/interview-prep/take-interview.js";
 import applyjobRoutes from "./routes/apply-jobs/get-jobs.js";
 import userdashboard from "./routes/dashboard/dashboard.js";
 import axios from "axios";
-import { RealtimeClient } from "@openai/realtime-api-beta";
 
 dotenv.config();
 
@@ -42,57 +41,6 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-const client = new RealtimeClient({
-  apiKey: process.env.TENSOR_STUDIO_API,
-});
-
-async function initTensorSession() {
-  await client.connect();
-  await client.updateSession({
-    instructions: "You are a friendly interviewer.",
-    voice: "monica",
-    language: "en",
-    turn_detection: {
-      type: "server_vad",
-      threshold: 0.5,
-      prefix_padding_ms: 300,
-      silence_duration_ms: 500,
-    },
-  });
-}
-
-app.get("/test", async (req, res) => {
-  try {
-    await initTensorSession();
-
-    client.on("conversation.updated", ({ item, delta }) => {
-      console.log(item, delta);
-    });
-    client.on("response.output_text.delta", (event) => {
-      console.log("AI text delta:", event.delta);
-    });
-    client.on("response.completed", (event) => {
-      console.log("Final response:", event.output_text);
-    });
-    await client.createResponse({
-      instructions: "Hello, can you introduce yourself?",
-      modalities: ["text", "audio"],
-    });
-    await client.createResponse({
-      instructions: "Hello, can you introduce yourself?",
-      modalities: ["text", "audio"],
-    });
-    client.on("response.output_text.delta", console.log);
-    client.on("response.completed", console.log);
-
-    client.sendUserMessageContent([
-      { type: "input_text", text: "Hello, can you introduce yourself?" },
-    ]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error starting TensorStudio test.");
-  }
-});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
