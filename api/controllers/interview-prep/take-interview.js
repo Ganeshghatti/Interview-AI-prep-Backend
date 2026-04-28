@@ -9,9 +9,6 @@ import axios from "axios";
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 import { analyseInterview } from "../../utils/interviewanalysis.js";
 
-// Retry helper with exponential backoff for rate limiting
-// For 429 errors, we use much longer delays since quota exhaustion takes time to recover
-
 
 // async function testAnalysis (interviewId) {
 //   try {
@@ -38,9 +35,7 @@ import { analyseInterview } from "../../utils/interviewanalysis.js";
 //   }
 // };
 
-//const elevenlabs = new ElevenLabsClient({
-//   apiKey: process.env.ELEVEN_LABS_KEY,
-// });
+
 
 export const getAllActiveJobRoles = async (req, res) => {
   try {
@@ -51,7 +46,6 @@ export const getAllActiveJobRoles = async (req, res) => {
   }
 };
 
-//speech to speech in streaming format
 
 export const startInterviewPrep = async (req, res) => {
   try {
