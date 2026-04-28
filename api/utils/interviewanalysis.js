@@ -240,7 +240,6 @@ Provide a thorough, professional analysis that would be valuable for both the ca
 Generate the analysis in the specified structured format with comprehensive data points for frontend visualization.
     `;
 
-    console.log(prompt);
 
     const response = await structuredLlm.invoke(prompt);
 
