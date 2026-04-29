@@ -9,7 +9,6 @@ import axios from "axios";
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 import { analyseInterview } from "../../utils/interviewanalysis.js";
 
-
 // async function testAnalysis (interviewId) {
 //   try {
 //     const interview = await InterviewPrep.findById(
@@ -35,8 +34,6 @@ import { analyseInterview } from "../../utils/interviewanalysis.js";
 //   }
 // };
 
-
-
 export const getAllActiveJobRoles = async (req, res) => {
   try {
     const jobRoles = await JobRole.find({ status: "Active" });
@@ -45,7 +42,6 @@ export const getAllActiveJobRoles = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 export const startInterviewPrep = async (req, res) => {
   try {
@@ -379,31 +375,31 @@ ${interview.conversation
 
     const audio = await eleven.textToSpeech.convert("JBFqnCBsd6RMkjVDRZzb", {
       text: reply,
-      modelId: "eleven_multilingual_v2",
+      modelId: "eleven_flash_v2_5",
       outputFormat: "mp3_44100_128",
     });
     console.log(audio, "Audio generated successfully");
 
-    let audioBuffer;
-    try {
-      const chunks = [];
-      const reader = audio.getReader();
+    // let audioBuffer;
+    // try {
+    //   const chunks = [];
+    //   const reader = audio.getReader();
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-      }
+    //   while (true) {
+    //     const { done, value } = await reader.read();
+    //     if (done) break;
+    //     chunks.push(value);
+    //   }
 
-      audioBuffer = Buffer.concat(chunks);
-      console.log("Audio buffer size:", audioBuffer.length, "bytes");
-    } catch (error) {
-      console.error("Error processing audio buffer:", error.message);
-      return res.status(500).json({
-        success: false,
-        message: "Failed to process audio buffer",
-      });
-    }
+    //   audioBuffer = Buffer.concat(chunks);
+    //   console.log("Audio buffer size:", audioBuffer.length, "bytes");
+    // } catch (error) {
+    //   console.error("Error processing audio buffer:", error.message);
+    //   return res.status(500).json({
+    //     success: false,
+    //     message: "Failed to process audio buffer",
+    //   });
+    // }
 
     interview.conversation.push({
       role: "user",
@@ -419,19 +415,30 @@ ${interview.conversation
 
     await interview.save();
     res.setHeader("Content-Type", "audio/mpeg");
-    res.setHeader("Content-Length", audioBuffer.length);
-    res.setHeader("Accept-Ranges", "bytes");
     res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Transfer-Encoding", "chunked");
 
-    res.status(200).json({
-      success: true,
-      message: "Response generated successfully",
-      response: {
-        text: reply,
-        audioData: audioBuffer.toString("base64"), 
-        audioFormat: "mp3",
-      },
-    });
+    res.flushHeaders();
+
+    try {
+      for await (const chunk of audio) {
+        res.write(chunk);
+      }
+      res.end();
+    } catch (err) {
+      console.error("Streaming error:", err);
+      res.destroy(err);
+    }
+
+    // res.status(200).json({
+    //   success: true,
+    //   message: "Response generated successfully",
+    //   response: {
+    //     text: reply,
+    //     audioData: audioBuffer.toString("base64"),
+    //     audioFormat: "mp3",
+    //   },
+    // });
   } catch (error) {
     console.error("Error in inprogressInterview:", error);
     res.status(500).json({ success: false, message: error.message });
