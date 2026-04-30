@@ -14,7 +14,9 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  exposedHeaders : ['X-Audio-Text']
+}));
 app.use(express.json());
 
 // Global rate limiting - applies to all routes

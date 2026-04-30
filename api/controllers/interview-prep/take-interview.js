@@ -380,27 +380,6 @@ ${interview.conversation
     });
     console.log(audio, "Audio generated successfully");
 
-    // let audioBuffer;
-    // try {
-    //   const chunks = [];
-    //   const reader = audio.getReader();
-
-    //   while (true) {
-    //     const { done, value } = await reader.read();
-    //     if (done) break;
-    //     chunks.push(value);
-    //   }
-
-    //   audioBuffer = Buffer.concat(chunks);
-    //   console.log("Audio buffer size:", audioBuffer.length, "bytes");
-    // } catch (error) {
-    //   console.error("Error processing audio buffer:", error.message);
-    //   return res.status(500).json({
-    //     success: false,
-    //     message: "Failed to process audio buffer",
-    //   });
-    // }
-
     interview.conversation.push({
       role: "user",
       content: text,
@@ -417,6 +396,8 @@ ${interview.conversation
     res.setHeader("Content-Type", "audio/mpeg");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Transfer-Encoding", "chunked");
+    res.setHeader("X-Audio-Text", encodeURIComponent(reply));
+    res.setHeader("Access-Control-Expose-Headers", "X-Audio-Text");
 
     res.flushHeaders();
 
@@ -429,16 +410,6 @@ ${interview.conversation
       console.error("Streaming error:", err);
       res.destroy(err);
     }
-
-    // res.status(200).json({
-    //   success: true,
-    //   message: "Response generated successfully",
-    //   response: {
-    //     text: reply,
-    //     audioData: audioBuffer.toString("base64"),
-    //     audioFormat: "mp3",
-    //   },
-    // });
   } catch (error) {
     console.error("Error in inprogressInterview:", error);
     res.status(500).json({ success: false, message: error.message });
