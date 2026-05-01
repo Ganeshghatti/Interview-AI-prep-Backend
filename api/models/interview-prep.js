@@ -19,7 +19,7 @@ const InterviewPrepSchema = new mongoose.Schema({
   duration: {
     type: Number,
     required: true, // Duration in minutes
-    enum: [5, 10, 15],
+    enum: [3, 5, 10, 20],
   },
   conversation: [Object],
   analytics: {
