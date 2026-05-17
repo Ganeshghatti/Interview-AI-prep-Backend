@@ -280,7 +280,7 @@ export const startInterviewPrep = async (req, res) => {
 export const inprogressInterview = async (req, res) => {
   try {
     const { interviewId } = req.params;
-    const { text } = req.body;
+    const { text, isinitialGreeting } = req.body;
 
     const interview = await InterviewPrep.findById(interviewId).populate(
       "jobRoleId",
@@ -370,7 +370,19 @@ ${interview.conversation
       apiKey: process.env.ELEVENLABS_API_KEY,
     });
 
-    const result = await model.generateContent(prompt);
+    let result;
+
+    if (isinitialGreeting) {
+      result = await model.generateContent(
+        `You are a professional interviewer. 
+     Introduce yourself warmly for a ${interview.jobRoleId.title} interview.
+     Briefly explain the interview format and ask the first interview question.
+     Keep it concise and natural.`,
+      );
+    } else {
+      result = await model.generateContent(prompt);
+    }
+
     const reply = await result.response.text();
 
     const audio = await eleven.textToSpeech.convert("JBFqnCBsd6RMkjVDRZzb", {
